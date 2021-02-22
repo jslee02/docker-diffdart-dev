@@ -17,7 +17,8 @@ jobs:
     name: bionic-v0.0
     runs-on: ubuntu-latest
     env:
-      BASE_IMAGE: ubuntu:bionic
+      BASE_IMAGE_NAME: ubuntu
+      BASE_IMAGE_VERSION: bionic
       DIFFDART_VERSION: v0.0
     steps:
       - name: Set up QEMU
@@ -33,12 +34,11 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          file: ./${{ env.DIFFDART_VERSION }}/Dockerfile
+          file: ./${{ env.DIFFDART_VERSION }}/Dockerfile.${{ env.BASE_IMAGE_NAME }}.${{ env.BASE_IMAGE_VERSION }}
           build-args: |
-            BASE_IMAGE=${{ env.BASE_IMAGE }}
-            BASE_DIR=./${{ env.DIFFDART_VERSION }}
+            DEBIAN_FRONTEND=noninteractive
           push: true
-          tags: ${{ env.DOCKER_REPO }}:${{ env.BASE_IMAGE }}-${{ env.DIFFDART_VERSION }}
+          tags: ${{ env.DOCKER_REPO }}:${{ env.BASE_IMAGE_NAME }}-${{ env.BASE_IMAGE_VERSION }}-${{ env.DIFFDART_VERSION }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 
@@ -46,7 +46,8 @@ jobs:
     name: focal-v0.0
     runs-on: ubuntu-latest
     env:
-      BASE_IMAGE: ubuntu:focal
+      BASE_IMAGE_NAME: ubuntu
+      BASE_IMAGE_VERSION: focal
       DIFFDART_VERSION: v0.0
     steps:
       - name: Set up QEMU
@@ -62,12 +63,11 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          file: ./${{ env.DIFFDART_VERSION }}/Dockerfile
+          file: ./${{ env.DIFFDART_VERSION }}/Dockerfile.${{ env.BASE_IMAGE_NAME }}.${{ env.BASE_IMAGE_VERSION }}
           build-args: |
-            BASE_IMAGE=${{ env.BASE_IMAGE }}
-            BASE_DIR=./${{ env.DIFFDART_VERSION }}
+            DEBIAN_FRONTEND=noninteractive
           push: true
-          tags: ${{ env.DOCKER_REPO }}:${{ env.BASE_IMAGE }}-${{ env.DIFFDART_VERSION }}
+          tags: ${{ env.DOCKER_REPO }}:${{ env.BASE_IMAGE_NAME }}-${{ env.BASE_IMAGE_VERSION }}-${{ env.DIFFDART_VERSION }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 
@@ -75,7 +75,8 @@ jobs:
     name: groovy-v0.0
     runs-on: ubuntu-latest
     env:
-      BASE_IMAGE: ubuntu:groovy
+      BASE_IMAGE_NAME: ubuntu
+      BASE_IMAGE_VERSION: groovy
       DIFFDART_VERSION: v0.0
     steps:
       - name: Set up QEMU
@@ -91,11 +92,10 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          file: ./${{ env.DIFFDART_VERSION }}/Dockerfile
+          file: ./${{ env.DIFFDART_VERSION }}/Dockerfile.${{ env.BASE_IMAGE_NAME }}.${{ env.BASE_IMAGE_VERSION }}
           build-args: |
-            BASE_IMAGE=${{ env.BASE_IMAGE }}
-            BASE_DIR=./${{ env.DIFFDART_VERSION }}
+            DEBIAN_FRONTEND=noninteractive
           push: true
-          tags: ${{ env.DOCKER_REPO }}:${{ env.BASE_IMAGE }}-${{ env.DIFFDART_VERSION }}
+          tags: ${{ env.DOCKER_REPO }}:${{ env.BASE_IMAGE_NAME }}-${{ env.BASE_IMAGE_VERSION }}-${{ env.DIFFDART_VERSION }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
