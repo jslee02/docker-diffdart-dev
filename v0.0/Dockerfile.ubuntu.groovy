@@ -40,7 +40,7 @@ RUN apt-get -y install wget libssl-dev \
 
 # Install Boost
 RUN apt-get install -qq -y --no-install-recommends \
-    libboost-dev
+    libboost-all-dev
 
 # Install Eigen
 RUN curl https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz > eigen.tar.gz && \
@@ -79,11 +79,12 @@ RUN git clone https://github.com/assimp/assimp.git && \
     rm -rf assimp
 
 # Install LAPACK
-RUN yum install -y lapack-devel
 RUN apt-get install -qq -y --no-install-recommends \
     liblapack-dev
 
 # Install MUMPS
+RUN apt-get install -qq -y --no-install-recommends \
+    gfortran
 RUN git clone https://github.com/coin-or-tools/ThirdParty-Mumps.git && \
     pushd ThirdParty-Mumps && \
     ./get.Mumps && \
