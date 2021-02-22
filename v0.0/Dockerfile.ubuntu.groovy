@@ -27,7 +27,7 @@ RUN apt-get install -qq -y --no-install-recommends \
 ENV version=3.19
 ENV build=0
 RUN apt-get -y remove cmake
-RUN apt-get -y install wget \
+RUN apt-get -y install wget libssl-dev \
     && wget -q https://github.com/Kitware/CMake/releases/download/v$version.$build/cmake-$version.$build.tar.gz \
     && tar -xzf cmake-$version.$build.tar.gz \
     && rm cmake-$version.$build.tar.gz \
