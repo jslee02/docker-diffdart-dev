@@ -80,6 +80,8 @@ RUN git clone https://github.com/assimp/assimp.git && \
 
 # Install LAPACK
 RUN yum install -y lapack-devel
+RUN apt-get install -qq -y --no-install-recommends \
+    liblapack-dev
 
 # Install MUMPS
 RUN git clone https://github.com/coin-or-tools/ThirdParty-Mumps.git && \
