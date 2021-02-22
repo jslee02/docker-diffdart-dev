@@ -1,4 +1,5 @@
-FROM --platform=$TARGETPLATFORM ubuntu:groovy
+# FROM --platform=$TARGETPLATFORM ubuntu:groovy
+FROM ubuntu:groovy
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -273,6 +274,29 @@ RUN pushd benchmark && \
     popd && \
     popd
 RUN rm -rf benchmark
+
+# ==============================================================================
+# Python binding dependencies
+# ==============================================================================
+RUN apt-get install -qq -y --no-install-recommends \
+    libpython3-dev \
+    python3 \
+    python3-dev \
+    python3-numpy \
+    python3-pip \
+    python3-setuptools
+
+# Install pybind11
+# ENV CPATH="${PYTHON_INCLUDE}"
+RUN git clone https://github.com/pybind/pybind11.git && \
+    pushd pybind11 && \
+    mkdir build && \
+    pushd build && \
+    cmake .. && \
+    make install -j$(nproc)
+
+# Install pytest
+RUN pip3 install pytest -U
 
 RUN protoc --version
 
