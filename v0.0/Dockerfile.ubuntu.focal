@@ -30,7 +30,7 @@ ENV version=3.19
 ENV build=0
 RUN apt-get -y remove cmake
 RUN apt-get -y install wget \
-    && wget -q https://cmake.org/files/v$version/cmake-$version.$build.tar.gz \
+    && wget -q https://github.com/Kitware/CMake/releases/download/v$version.$build/cmake-$version.$build.tar.gz \
     && tar -xzf cmake-$version.$build.tar.gz \
     && rm cmake-$version.$build.tar.gz \
     && pushd cmake-$version.$build \
