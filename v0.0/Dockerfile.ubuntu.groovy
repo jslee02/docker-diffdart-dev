@@ -1,10 +1,12 @@
 # FROM --platform=$TARGETPLATFORM ubuntu:groovy
-FROM ubuntu:groovy
+FROM ubuntu:focal
 
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Use /bin/bash to use pushd/popd
 SHELL ["/bin/bash", "-c"]
+
+ENV PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:/usr/local/lib64/pkgconfig/"
 
 # Update apt-get
 RUN apt-get update -qq
@@ -83,27 +85,27 @@ RUN git clone https://github.com/assimp/assimp.git && \
 RUN apt-get install -qq -y --no-install-recommends \
     liblapack-dev
 
-# Install MUMPS
-RUN apt-get install -qq -y --no-install-recommends \
-    gfortran
-RUN git clone https://github.com/coin-or-tools/ThirdParty-Mumps.git && \
-    pushd ThirdParty-Mumps && \
-    ./get.Mumps && \
-    ./configure && \
-    make -j14 && \
-    make install && \
-    popd && \
-    rm -rf ThirdParty-Mumps
-
 # Install IPOPT
-RUN git clone https://github.com/coin-or/Ipopt.git && \
-    pushd Ipopt && \
-    ./configure --with-mumps && \
-    make -j14 && \
-    make install && \
-    popd && \
-    rm -rf Ipopt && \
-    ln -s /usr/local/include/coin-or /usr/local/include/coin
+RUN apt-get install -qq -y --no-install-recommends \
+    coinor-libipopt-dev
+# RUN apt-get install -qq -y --no-install-recommends \
+#     gfortran
+# RUN git clone https://github.com/coin-or-tools/ThirdParty-Mumps.git && \
+#     pushd ThirdParty-Mumps && \
+#     ./get.Mumps && \
+#     ./configure && \
+#     make -j14 && \
+#     make install && \
+#     popd && \
+#     rm -rf ThirdParty-Mumps
+# RUN git clone https://github.com/coin-or/Ipopt.git && \
+#     pushd Ipopt && \
+#     ./configure --with-mumps && \
+#     make -j14 && \
+#     make install && \
+#     popd && \
+#     rm -rf Ipopt && \
+#     ln -s /usr/local/include/coin-or /usr/local/include/coin
 
 # Install FCL
 # Key note: this needs to happen before octomap
@@ -172,15 +174,17 @@ RUN git clone https://github.com/leethomason/tinyxml2.git && \
 #     rm -rf OpenSceneGraph
 
 # Install tinyxml1
-RUN git clone https://github.com/robotology-dependencies/tinyxml.git && \
-    pushd tinyxml && \
-    mkdir build && \
-    pushd build && \
-    cmake .. && \
-    make install -j10 && \
-    popd && \
-    popd && \
-    rm -rf tinyxml
+RUN apt-get install -qq -y --no-install-recommends \
+    libtinyxml-dev
+# RUN git clone https://github.com/robotology-dependencies/tinyxml.git && \
+#     pushd tinyxml && \
+#     mkdir build && \
+#     pushd build && \
+#     cmake .. && \
+#     make install -j10 && \
+#     popd && \
+#     popd && \
+#     rm -rf tinyxml
 
 # Install urdfdom_headers
 RUN git clone https://github.com/ros/urdfdom_headers.git && \
@@ -216,14 +220,8 @@ RUN git clone https://github.com/ros/urdfdom.git && \
     rm -rf urdfdom
 
 # Install PerfUtils
-RUN git clone https://github.com/PlatformLab/PerfUtils.git && \
+RUN git clone https://github.com/jslee02/PerfUtils.git && \
     pushd PerfUtils && \
-    sed -i 's/3.11/3.6.1/g' CMakeLists.txt && \
-    sed -i '94,$d' CMakeLists.txt && \
-    sed -i '30,33d' CMakeLists.txt && \
-    sed -i '36i\ \ \ \ CXX_STANDARD 11' CMakeLists.txt && \
-    sed -i '36i\ \ \ \ CXX_STANDARD_REQUIRED YES' CMakeLists.txt && \
-    sed -i '36i\ \ \ \ CXX_EXTENSIONS NO' CMakeLists.txt && \
     mkdir build && \
     pushd build && \
     cmake .. && \
@@ -301,3 +299,7 @@ RUN pip3 install pytest -U
 RUN protoc --version
 
 RUN rm -rf /var/lib/apt/lists/*
+
+ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib/"
+
+RUN ldconfig
